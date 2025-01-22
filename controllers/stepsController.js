@@ -1,4 +1,4 @@
-const Step = require("../models/StepsModel.js"); // Asegúrate de que el modelo esté correctamente importado
+const Step = require("../models/stepsModel.js"); // Asegúrate de que el modelo esté correctamente importado
 
 // Obtener todos los pasos
 exports.getAllSteps = async (req, res) => {
