@@ -11,7 +11,7 @@ app.use(express.json());
 // Permitir el origen específico para el entorno de desarrollo
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: "https://capstone-juan-vue.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
