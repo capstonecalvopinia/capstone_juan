@@ -85,15 +85,15 @@ class ProductController {
   // Método para actualizar un producto
   static async updateProduct(req, res) {
     const { id } = req.params;
-    const { name, description, price, stock, isAvailable, categoryID } = req.body;
+    const { Name, Description, Price, Stock, IsAvailable, CategoryID } = req.body;
     try {
       const updatedProduct = {
-        name,
-        description,
-        price,
-        stock,
-        isAvailable,
-        categoryID,
+        Name,
+        Description,
+        Price,
+        Stock,
+        IsAvailable,
+        CategoryID
       };
 
       const result = await ProductModel.updateProduct(id, updatedProduct);

@@ -200,7 +200,7 @@ class ProductModel {
 
   // Método para actualizar un producto existente
   static async updateProduct(productID, productData) {
-    const { name, description, price, stock, isAvailable, categoryID } =
+    const { Name, Description, Price, Stock, IsAvailable, CategoryID } =
       productData;
 
     try {
@@ -212,14 +212,13 @@ class ProductModel {
       await pool
         .request()
         .input("ProductID", sql.Int, productID)
-        .input("Name", sql.VarChar(100), name)
-        .input("Description", sql.Text, description)
-        .input("Price", sql.Decimal, price)
-        .input("Stock", sql.Int, stock)
-        .input("IsAvailable", sql.Bit, isAvailable)
-        .input("CategoryID", sql.Int, categoryID).query(`
+        .input("Name", sql.VarChar(100), Name)
+        .input("Description", sql.Text, Description)
+        .input("Price", sql.Decimal, Price)
+        .input("Stock", sql.Int, Stock)
+        .input("IsAvailable", sql.Bit, IsAvailable).query(`
           UPDATE Product
-          SET Name = @Name, Description = @Description, Price = @Price, Stock = @Stock, IsAvailable = @IsAvailable, CategoryID = @CategoryID
+          SET Name = @Name, Description = @Description, Price = @Price, Stock = @Stock, IsAvailable = @IsAvailable
           WHERE ProductID = @ProductID
         `);
 
