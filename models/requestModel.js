@@ -530,7 +530,7 @@ class RequestModel {
 
       const resSendEmail = await sendEmail(
         usersTo,
-        "FRISH | Órden Ingresada",
+        "Frish Alimentos Congelados | Orden Ingresada",
         " ",
         html
       );
@@ -547,14 +547,14 @@ class RequestModel {
       let html = `
     <div style="font-family: Arial, sans-serif; color: #333;">
       <h2 style="text-align: center; color: #4CAF50;">¡Gracias por tu ayuda!</h2>
-      <p>Estimado usuario Financiero, la orden con id ${data.RequestID}ha sido ingresada, por favor valida el pago correspondiente para continuar con el proceso.</p>
+      <p>Estimado usuario Financiero, la orden con id ${data.RequestID} ha sido ingresada, por favor valida el pago correspondiente para continuar con el proceso.</p>
       </div>`;
 
       console.log("htmlMessage: ", html);
 
       const resSendEmail = await sendEmail(
         usersTo,
-        "FRISH | Validando Órden",
+        "Frish Alimentos Congelados | Validando Orden",
         " ",
         html
       );
@@ -578,7 +578,7 @@ class RequestModel {
 
       const resSendEmail = await sendEmail(
         usersTo,
-        "FRISH | Órden Validada",
+        "Frish Alimentos Congelados | Orden Validada",
         " ",
         html
       );
@@ -595,14 +595,14 @@ class RequestModel {
       let html = `
     <div style="font-family: Arial, sans-serif; color: #333;">
       <h2 style="text-align: center; color: #4CAF50;">¡Gracias por tu ayuda!</h2>
-      <p>Estimado usuario Bodeguero, la órden con id ${data.RequestID} ha sido puesta en 'Preparando Órden', por favor continuar con el proceso.</p>
+      <p>Estimado usuario Bodeguero, la orden con id ${data.RequestID} ha sido puesta en 'Preparando Orden', por favor continuar con el proceso.</p>
       </div>`;
 
       console.log("htmlMessage: ", html);
 
       const resSendEmail = await sendEmail(
         usersTo,
-        "FRISH | Preparando Órden",
+        "Frish Alimentos Congelados | Preparando Orden",
         " ",
         html
       );
@@ -619,14 +619,14 @@ class RequestModel {
       let html = `
     <div style="font-family: Arial, sans-serif; color: #333;">
       <h2 style="text-align: center; color: #4CAF50;">¡Gracias por tu ayuda!</h2>
-      <p>Estimado usuario Repartidor, la órden con id ${data.RequestID} ha sido puesta en 'Reparto', por favor continuar con el proceso.</p>
+      <p>Estimado usuario Repartidor, la orden con id ${data.RequestID} ha sido puesta en 'Reparto', por favor continuar con el proceso.</p>
       </div>`;
 
       console.log("htmlMessage: ", html);
 
       const resSendEmail = await sendEmail(
         usersTo,
-        "FRISH | Órden En Reparto",
+        "Frish Alimentos Congelados | Orden En Reparto",
         " ",
         html
       );
@@ -655,7 +655,7 @@ class RequestModel {
 
     const resSendEmail = await sendEmail(
       usersTo,
-      "FRISH | Verificación de Pago Solicitada",
+      "Frish Alimentos Congelados | Verificación de Pago Solicitada",
       " ",
       html
     );
