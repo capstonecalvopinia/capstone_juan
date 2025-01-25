@@ -1,5 +1,7 @@
 // controllers/productController.js
-const ProductModel = require('../models/productModel');
+const ProductModel = require('../models/productModel.js');
+
+const DiscountModel = require("../models/discountModel.js");
 
 const CategoryProductModel = require("../models/categoryProductModel.js");
 
@@ -9,6 +11,15 @@ class ProductController {
     try {
       console.log("getAllProducts: ");
       const products = await ProductModel.getAllProducts();
+
+
+
+
+      const allDiscounts = DiscountModel.getAllDiscounts()
+
+
+      console.log("allDiscounts: ", allDiscounts);
+
       res.json(products);
     } catch (error) {
       res.status(500).json({ msg: "Error al obtener los productos", error });

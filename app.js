@@ -40,6 +40,7 @@ const imageRoutes = require("./routes/imageRoutes");
 const requestTypeRoutes = require("./routes/requestTypeRoutes.js");
 const statisticsRoutes = require("./routes/statisticsRoutes.js");
 const recommendationRoutes = require("./routes/recommendationRoutes.js");
+const discountRoutes = require("./routes/discountRoutes.js");
 
 app.use("/api", userRoutes);
 app.use("/api", productRoutes);
@@ -60,6 +61,7 @@ app.use("/api", requestTypeRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", statisticsRoutes);
 app.use("/api", recommendationRoutes);
+app.use("/api", discountRoutes);
 
 //http://localhost:3000/api/users
 
