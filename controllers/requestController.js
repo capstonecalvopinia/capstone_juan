@@ -243,7 +243,7 @@ const requestController = {
         "Se ha procesado correctamente";
       const resSendEmail = await sendEmail(
         UserEmail,
-        "FRISH | Notificación Proceso De Compra",
+        "Frish Alimentos Congelados | Notificación Proceso De Compra",
         text,
         html
       );
