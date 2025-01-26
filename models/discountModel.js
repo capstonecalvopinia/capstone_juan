@@ -46,7 +46,9 @@ class DiscountModel {
   static async getDiscountById(discountID) {
     try {
       const pool = await databaseInstance.getConnection();
-      const result = await pool.request().input("DiscountID", sql.Int, discountID).query(`
+      const result = await pool
+        .request()
+        .input("DiscountID", sql.Int, discountID).query(`
         SELECT *
         FROM Discount
         WHERE DiscountID = @DiscountID
@@ -71,6 +73,7 @@ class DiscountModel {
 
   // Método para obtener descuentos activos por ProductID
   static async getActiveDiscountsByProductId(productID) {
+    console.log("productID getActiveDiscountsByProductId: ", productID);
     try {
       const pool = await databaseInstance.getConnection();
       const query = `
@@ -81,10 +84,16 @@ class DiscountModel {
           AND EndDate >= GETDATE()
       `;
 
-      const result = await pool.request().input("ProductID", sql.Int, productID).query(query);
+      const result = await pool
+        .request()
+        .input("ProductID", sql.Int, productID)
+        .query(query);
 
       if (result.recordset.length === 0) {
-        return { success: false, message: "No hay descuentos activos para este producto" };
+        return {
+          success: false,
+          message: "No hay descuentos activos para este producto",
+        };
       }
 
       return { success: true, discounts: result.recordset };
@@ -113,6 +122,53 @@ class DiscountModel {
       return {
         success: false,
         message: "Error al eliminar el descuento",
+        error: error.message,
+      };
+    }
+  }
+
+  // Método para actualizar un descuento
+  static async updateDiscount(discountID, discountData) {
+    const { ProductID, DiscountPercentage, StartDate, EndDate } = discountData;
+
+    try {
+      const pool = await databaseInstance.getConnection();
+
+      // Verificar si el descuento existe
+      const existingDiscount = await pool
+        .request()
+        .input("DiscountID", sql.Int, discountID).query(`
+      SELECT *
+      FROM Discount
+      WHERE DiscountID = @DiscountID
+    `);
+
+      if (existingDiscount.recordset.length === 0) {
+        return { success: false, message: "Descuento no encontrado" };
+      }
+
+      // Actualizar el descuento
+      await pool
+        .request()
+        .input("DiscountID", sql.Int, discountID)
+        .input("ProductID", sql.Int, ProductID)
+        .input("DiscountPercentage", sql.Decimal(5, 2), DiscountPercentage)
+        .input("StartDate", sql.Date, StartDate)
+        .input("EndDate", sql.Date, EndDate).query(`
+        UPDATE Discount
+        SET ProductID = @ProductID,
+            DiscountPercentage = @DiscountPercentage,
+            StartDate = @StartDate,
+            EndDate = @EndDate
+        WHERE DiscountID = @DiscountID
+      `);
+
+      return { success: true, message: "Descuento actualizado exitosamente" };
+    } catch (error) {
+      console.error("Error al actualizar el descuento:", error);
+      return {
+        success: false,
+        message: "Error al actualizar el descuento",
         error: error.message,
       };
     }

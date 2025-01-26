@@ -400,8 +400,8 @@ class RequestModel {
     console.log("requestData create: ", requestData);
     const pool = await databaseInstance.getConnection();
     const query = `
-      INSERT INTO Request (UserID, PriorityID, PriorityReason, RequestTypeID, PaymentTypeID, PaymentStateID, Address, RequestedDate, RequestedToDate, DeliveredDate)
-      VALUES (@UserID, @PriorityID, @PriorityReason, @RequestTypeID, @PaymentTypeID, @PaymentStateID, @Address, @RequestedDate, @RequestedToDate, @DeliveredDate);
+      INSERT INTO Request (UserID, PriorityID, PriorityReason, RequestTypeID, PaymentTypeID, PaymentStateID, Address, RequestedDate, RequestedToDate, DeliveredDate, Total)
+      VALUES (@UserID, @PriorityID, @PriorityReason, @RequestTypeID, @PaymentTypeID, @PaymentStateID, @Address, @RequestedDate, @RequestedToDate, @DeliveredDate, @Total);
       SELECT SCOPE_IDENTITY() AS RequestID;
     `;
     try {
@@ -417,6 +417,7 @@ class RequestModel {
         .input("RequestedDate", sql.DateTime, requestData.RequestedDate)
         .input("RequestedToDate", sql.DateTime, requestData.RequestedToDate)
         .input("DeliveredDate", sql.DateTime, requestData.DeliveredDate)
+        .input("Total", sql.Float, requestData.Total)
         .query(query);
 
       // Extraer el RequestID del resultado

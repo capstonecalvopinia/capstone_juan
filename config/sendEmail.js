@@ -11,7 +11,7 @@ async function sendEmail(to, subject, text, html) {
 
       service: "gmail", // Puedes usar otro servicio de correo
       auth: {
-        user: process.env.GMAIL_ADDRESS, // Tu correo electrónico
+        user: process.env.GMAIL_ADDcS, // Tu correo electrónico
         pass: process.env.GMAIL_APP_PASS, // Contraseña de tu correo
       },
       tls: {

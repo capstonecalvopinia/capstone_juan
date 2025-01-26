@@ -9,13 +9,27 @@ const app = express();
 app.use(express.json());
 
 // Permitir el origen específico para el entorno de desarrollo
+const allowedOrigins = [
+  "https://capstone-juan-vue.onrender.com",
+  "http://localhost:8080"
+];
+
 app.use(
   cors({
-    origin: "https://capstone-juan-vue.onrender.com",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        // Permitir solicitudes desde los orígenes permitidos o sin origen (e.g., Postman)
+        callback(null, true);
+      } else {
+        // Bloquear solicitudes de orígenes no permitidos
+        callback(new Error("No permitido por CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
 
 //Para todas
 app.use(cors());

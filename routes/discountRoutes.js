@@ -18,4 +18,8 @@ router.get('/discounts/active/:productId', DiscountController.getActiveDiscounts
 // Ruta para eliminar un descuento por su ID
 router.delete('/discounts/:id', DiscountController.deleteDiscount);
 
+// Ruta para actualizar un descuento por su ID
+router.put('/discounts/:id', DiscountController.updateDiscount);
+
+
 module.exports = router;

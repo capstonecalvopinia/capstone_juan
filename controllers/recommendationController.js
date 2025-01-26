@@ -19,9 +19,9 @@ const RecommendationController = {
 
     //---------------------------------------
     const products = await ProductModel.getAllProducts();
-    console.log("products: ", products);
+    //console.log("products: ", products);
     const userRequests = await RequestModel.getById(userId);
-    console.log("userRequests: ", userRequests);
+    //console.log("userRequests: ", userRequests);
 
     let catalogData = [];
 
@@ -34,7 +34,7 @@ const RecommendationController = {
       });
     });
 
-    console.log("catalogData: ", catalogData);
+    //console.log("catalogData: ", catalogData);
 
     let historyData = [];
 
@@ -49,7 +49,7 @@ const RecommendationController = {
       );
     }
 
-    console.log("historyData: ", historyData);
+    //console.log("historyData: ", historyData);
 
     //----------------------------------------
     // Crear el objeto de datos para enviar a la API de Python
@@ -68,9 +68,9 @@ const RecommendationController = {
       );
 
       let productsId = [];
-      console.log("response: ", response);
+      //console.log("response: ", response);
       response.data.recommendations.forEach((recommendation) => {
-        console.log("recommendation: ", recommendation);
+        //console.log("recommendation: ", recommendation);
         productsId.push(recommendation.product_id);
       });
       let productsInfo = await ProductModel.getProductsByIds(productsId);
@@ -84,10 +84,10 @@ const RecommendationController = {
         data: response.data,
       });
     } catch (error) {
-      console.error(
-        "Error al obtener recomendaciones desde la API de Python:",
-        error
-      );
+      // console.error(
+      //   "Error al obtener recomendaciones desde la API de Python:",
+      //   error
+      // );
       return res.status(500).json({
         status: false,
         msg: "Error al generar recomendaciones",
@@ -229,19 +229,19 @@ const RecommendationController = {
       });
 
       let recipeInfo = await RecipeModel.getRecipesByIds(recipeIds);
-      console.log("recipeInfo: ", recipeInfo);
+      //console.log("recipeInfo: ", recipeInfo);
       // Obtener el arreglo de RecipeID de todas las recetas en recipeInfo
       const recipeIdsImgs = recipeInfo.recipes.map((recipe) => recipe.RecipeID);
 
-      console.log("recipeIdsImgs: ", recipeIdsImgs);
+      //console.log("recipeIdsImgs: ", recipeIdsImgs);
 
       const recipesImages = await ImageModel.getImagesByRecipeIds(
         recipeIdsImgs
       );
-      console.log("recipesImages: ", recipesImages);
+      //console.log("recipesImages: ", recipesImages);
       // Llamar a la función con los datos
       const updatedRecipeInfo = addImagesToRecipes(recipeInfo, recipesImages);
-      console.log("updatedRecipeInfo: ", updatedRecipeInfo);
+      //console.log("updatedRecipeInfo: ", updatedRecipeInfo);
       response.data.recipeInfo = updatedRecipeInfo;
 
       // Si la respuesta es exitosa, retornar los datos

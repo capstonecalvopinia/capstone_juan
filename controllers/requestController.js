@@ -133,6 +133,7 @@ const requestController = {
       DeliveredDate,
       Products,
       UserEmail,
+      Total
     } = req.body;
     console.log("UserEmail:", UserEmail);
     //Calculo de los valores
@@ -163,6 +164,7 @@ const requestController = {
       RequestedDate,
       RequestedToDate,
       DeliveredDate,
+      Total
     };
 
     try {
