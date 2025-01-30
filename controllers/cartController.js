@@ -53,6 +53,7 @@ const CartController = {
       RequestedToDate,
       DeliveredDate,
       Products,
+      Total
     } = req.body;
 
     const cartData = {
@@ -67,6 +68,7 @@ const CartController = {
       RequestedDate,
       RequestedToDate,
       DeliveredDate,
+      Total
     };
     console.log("cartData in create Cart: ", cartData);
 
@@ -178,8 +180,10 @@ const CartController = {
   // Eliminar un carrito por UserID
   async deleteUserCart(req, res) {
     const { userId } = req.params;
+    console.log("userId: ", userId);
     try {
       const existingCart = await Cart.getByUserId(userId);
+      console.log("existingCart: ", existingCart);
 
       if (!existingCart) {
         return res.status(404).json({
@@ -200,6 +204,7 @@ const CartController = {
         data: result,
       });
     } catch (error) {
+      console.error("Error al eliminar carrito: ", error);
       res.status(500).json({
         status: false,
         msg: "Error deleting Cart",

@@ -3,49 +3,46 @@ require("dotenv").config();
 
 class Database {
   constructor() {
-    this.poolPromise = null;
-    this.config = {
-      server: process.env.DB_SERVER,
-      database: process.env.DB_DATABASE,
-      port: 1433,
-      options: {
-        encrypt: true,
-        trustServerCertificate: true, // Solo para desarrollo local
-      },
-      user: process.env.DB_USER, // Nombre de usuario del login de SQL Server
-      password: process.env.DB_PASSWORD, // Contraseña para ese login
-    };
+    if (!Database.instance) {
+      this.poolPromise = null;
+      this.config = {
+        server: process.env.DB_SERVER,
+        database: process.env.DB_DATABASE,
+        port: 1433,
+        options: {
+          encrypt: true,
+          trustServerCertificate: true, 
+        },
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+      };
+      Database.instance = this;
+    }
+
+    return Database.instance;
   }
 
-  // Método para obtener la conexión
   async getConnection() {
-    //console.log("this.poolPromise pre: ", this.poolPromise);
-
     if (!this.poolPromise) {
       this.poolPromise = sql
         .connect(this.config)
         .then((pool) => {
-          console.info(
-            `Conexión a la base de datos ${this.config.database} establecida`
-          );
+          console.info(`Conectado a la BD: ${this.config.database}`);
           return pool;
         })
         .catch((err) => {
-          console.error("Error al conectar a la base de datos", err);
-          throw err; // Re-lanza el error para manejo posterior
+          console.error("Error de conexión:", err);
+          throw err;
         });
     }
-
-    //console.log("this.poolPromise post: ", this.poolPromise);
     return this.poolPromise;
   }
 
-  // Función para cerrar la conexión
   async disconnect() {
     try {
       if (sql && sql.close) {
         await sql.close();
-        this.poolPromise = null; // Resetear la promesa de conexión
+        this.poolPromise = null;
         console.info("Conexión cerrada con éxito");
       }
     } catch (error) {
@@ -54,6 +51,6 @@ class Database {
   }
 }
 
-// Exportar una instancia de la clase Database
+// Exportar una única instancia
 const databaseInstance = new Database();
 module.exports = { databaseInstance, sql };

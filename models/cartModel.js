@@ -175,62 +175,73 @@ class CartModel {
     const pool = await databaseInstance.getConnection();
     const query = `
       SELECT 
-        Cart.*,
-  
-        [User].UserID AS User_UserID,
-        [User].Name AS User_UserName,
-        [User].Email AS User_Email,
-        [User].BornDate AS User_BornDate,
-        [User].PersonIdentification AS User_PersonIdentification,
-        [User].Cellphone AS User_Cellphone,
-  
-        Priority.PriorityID AS Priority_PriorityID,
-        Priority.Name AS Priority_Name,
-  
-        RequestType.RequestTypeID AS RequestType_RequestTypeID,
-        RequestType.Name AS RequestType_Name,
-  
-        RequestState.RequestStateID AS RequestState_RequestStateID,
-        RequestState.Name AS RequestState_Name,
-  
-        PaymentType.PaymentTypeID AS PaymentType_PaymentTypeID,
-        PaymentType.Name AS PaymentType_Name,
-  
-        PaymentState.PaymentStateID AS PaymentState_PaymentStateID,
-        PaymentState.Name AS PaymentState_Name,
-  
-        CartProduct.Quantity AS Cart_Quantity,
-        Product.ProductID AS Product_ProductID,
-        Product.Name AS Product_Name,
-        Product.Description AS Product_Description,
-        Product.Price AS Product_Price,
-        Product.Stock AS Product_Stock,
-        Product.IsAvailable AS Product_IsAvailable,
-        Product.UnitID AS Product_UnitID,
-        Image.ImageID AS ImageID,
-        Image.ImageUrl AS ImageUrl
-      FROM 
-        Cart
-      JOIN 
-        [User] ON Cart.UserID = [User].UserID
-      JOIN 
-        Priority ON Cart.PriorityID = Priority.PriorityID
-      JOIN 
-        RequestType ON Cart.RequestTypeID = RequestType.RequestTypeID
-      JOIN 
-        RequestState ON Cart.RequestStateID = RequestState.RequestStateID
-      JOIN 
-        PaymentType ON Cart.PaymentTypeID = PaymentType.PaymentTypeID
-      JOIN 
-        PaymentState ON Cart.PaymentStateID = PaymentState.PaymentStateID
-      LEFT JOIN 
-        CartProduct ON Cart.CartID = CartProduct.CartID
-      LEFT JOIN
-        Product ON CartProduct.ProductID = Product.ProductID
-      LEFT JOIN
-        Image ON Product.ProductID = Image.ProductID
-      WHERE
-        Cart.UserID = @UserID
+      Cart.*,
+    
+      -- Detalles del Usuario
+      [User].UserID AS User_UserID,
+      [User].Name AS User_UserName,
+      [User].Email AS User_Email,
+      [User].BornDate AS User_BornDate,
+      [User].PersonIdentification AS User_PersonIdentification,
+      [User].Cellphone AS User_Cellphone,
+    
+      -- Detalles de la Prioridad
+      Priority.PriorityID AS Priority_PriorityID,
+      Priority.Name AS Priority_Name,
+    
+      -- Detalles del Tipo de Solicitud
+      RequestType.RequestTypeID AS RequestType_RequestTypeID,
+      RequestType.Name AS RequestType_Name,
+    
+      -- Detalles del Estado de Solicitud
+      RequestState.RequestStateID AS RequestState_RequestStateID,
+      RequestState.Name AS RequestState_Name,
+    
+      -- Detalles del Tipo de Pago
+      PaymentType.PaymentTypeID AS PaymentType_PaymentTypeID,
+      PaymentType.Name AS PaymentType_Name,
+    
+      -- Detalles del Estado de Pago
+      PaymentState.PaymentStateID AS PaymentState_PaymentStateID,
+      PaymentState.Name AS PaymentState_Name,
+    
+      -- Detalles de Productos en el Carrito
+      CartProduct.Quantity AS Cart_Quantity,
+      Product.ProductID AS Product_ProductID,
+      Product.Name AS Product_Name,
+      Product.Description AS Product_Description,
+      Product.Price AS Product_Price,
+      Product.Stock AS Product_Stock,
+      Product.IsAvailable AS Product_IsAvailable,
+      Product.UnitID AS Product_UnitID,
+    
+      -- Detalles de Imágenes
+      Image.ImageID AS ImageID,
+      Image.ImageUrl AS ImageUrl
+  FROM 
+      Cart
+  -- Cambiar JOIN por LEFT JOIN para relaciones opcionales
+  LEFT JOIN 
+      [User] ON Cart.UserID = [User].UserID
+  LEFT JOIN 
+      Priority ON Cart.PriorityID = Priority.PriorityID
+  LEFT JOIN 
+      RequestType ON Cart.RequestTypeID = RequestType.RequestTypeID
+  LEFT JOIN 
+      RequestState ON Cart.RequestStateID = RequestState.RequestStateID
+  LEFT JOIN 
+      PaymentType ON Cart.PaymentTypeID = PaymentType.PaymentTypeID
+  LEFT JOIN 
+      PaymentState ON Cart.PaymentStateID = PaymentState.PaymentStateID
+  LEFT JOIN 
+      CartProduct ON Cart.CartID = CartProduct.CartID
+  LEFT JOIN
+      Product ON CartProduct.ProductID = Product.ProductID
+  LEFT JOIN
+      Image ON Product.ProductID = Image.ProductID
+  -- Filtro de Usuario
+  WHERE
+      Cart.UserID = @UserID
     `;
 
     try {
@@ -290,33 +301,31 @@ class CartModel {
     }
   }
 
-
   // Crear un nuevo pedido
   static async create(CartData) {
     console.log("CartData create: ", CartData);
     const pool = await databaseInstance.getConnection();
     const query = `
-      INSERT INTO Cart (UserID, PriorityID, PriorityReason, RequestTypeID, RequestStateID, PaymentTypeID, PaymentStateID, Address, RequestedDate, RequestedToDate, DeliveredDate)
-      VALUES (@UserID, @PriorityID, @PriorityReason, @RequestTypeID, @RequestStateID, @PaymentTypeID, @PaymentStateID, @Address, @RequestedDate, @RequestedToDate, @DeliveredDate);
+      INSERT INTO Cart (UserID, PriorityID, PriorityReason, RequestTypeID, RequestStateID, PaymentTypeID, PaymentStateID, Address, RequestedDate, RequestedToDate, DeliveredDate, Total)
+      VALUES (@UserID, @PriorityID, @PriorityReason, @RequestTypeID, @RequestStateID, @PaymentTypeID, @PaymentStateID, @Address, @RequestedDate, @RequestedToDate, @DeliveredDate, @Total);
       SELECT SCOPE_IDENTITY() AS CartID;
     `;
     try {
-      if(CartData.RequestedToDate == ""){
+      if (CartData.RequestedToDate == "") {
         CartData.RequestedToDate = null;
       }
 
-      if(CartData.PriorityID == ""){
+      if (CartData.PriorityID == "") {
         CartData.PriorityID = 2;
       }
 
-      if(CartData.RequestTypeID == ""){
+      if (CartData.RequestTypeID == "") {
         CartData.RequestTypeID = 1;
       }
 
-      if(CartData.PaymentTypeID == ""){
+      if (CartData.PaymentTypeID == "") {
         CartData.PaymentTypeID = 2;
       }
-
 
       const res = await pool
         .request()
@@ -331,6 +340,7 @@ class CartModel {
         .input("RequestedDate", sql.DateTime, CartData.RequestedDate)
         .input("RequestedToDate", sql.DateTime, CartData.RequestedToDate)
         .input("DeliveredDate", sql.DateTime, CartData.DeliveredDate)
+        .input("Total", sql.Float, CartData.Total)
         .query(query);
 
       // Extraer el CartID del resultado
@@ -350,7 +360,7 @@ class CartModel {
       UPDATE Cart
       SET UserID = @UserID, PriorityID = @PriorityID, RequestTypeID = @RequestTypeID, RequestStateID = @RequestStateID, 
           PaymentTypeID = @PaymentTypeID, PaymentStateID = @PaymentStateID, Address = @Address, 
-          RequestedDate = @RequestedDate, RequestedToDate = @RequestedToDate, DeliveredDate = @DeliveredDate
+          RequestedDate = @RequestedDate, RequestedToDate = @RequestedToDate, DeliveredDate = @DeliveredDate, Total = @Total
       WHERE CartID = @CartID
     `;
     try {
@@ -367,8 +377,9 @@ class CartModel {
         .input("RequestedToDate", sql.DateTime, updatedData.RequestedToDate)
         .input("DeliveredDate", sql.DateTime, updatedData.DeliveredDate)
         .input("CartID", sql.Int, CartId)
+        .input("Total", sql.Float, updatedData.Total)
         .query(query);
-        return res;
+      return res;
     } catch (error) {
       console.error("Error updating Cart:", error.message);
       throw new Error("Error updating Cart: " + error.message);
@@ -377,6 +388,7 @@ class CartModel {
 
   // Eliminar un pedido
   static async delete(CartId) {
+    console.log("CartId: ", CartId);
     const pool = await databaseInstance.getConnection();
     const query = "DELETE FROM Cart WHERE CartID = @CartID";
     try {

@@ -93,6 +93,7 @@ class CartProduct {
 
   static async deleteByCartId(cartID) {
     try {
+      console.log("cartID: ", cartID);
       const pool = await databaseInstance.getConnection();
       const result = await pool
         .request()
